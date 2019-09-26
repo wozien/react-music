@@ -1,12 +1,43 @@
-import React, { forwardRef, useState, useEffect, useRef, useImperativeHandle } from 'react';
+import React, {
+  forwardRef,
+  useState,
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  useMemo
+} from 'react';
 import PropTypes from 'prop-types';
 import BScroll from 'better-scroll';
 import styled from 'styled-components';
+import Loading from '../loading';
+import Loading2 from '../loading-v2';
+import { debunce } from '../../api/utils';
 
 const ScrollContainer = styled.div`
   width: 100%;
   height: 100%;
   overflow: hidden;
+`;
+
+const PullUpLoading = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 5px;
+  width: 60px;
+  height: 60px;
+  margin: auto;
+  z-index: 100;
+`;
+
+const PullDownLoading = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 30px;
+  margin: auto;
+  z-index: 100;
 `;
 
 const Scroll = forwardRef((props, ref) => {
@@ -25,6 +56,16 @@ const Scroll = forwardRef((props, ref) => {
   } = props;
 
   const { onScroll, pullDown, pullUp } = props;
+
+  let pullUpDebunce = useMemo(() => {
+    return debunce(pullUp, 300);
+    // eslint-disable-next-line
+  }, [pullUp]);
+
+  let pullDownDebunce = useMemo(() => {
+    return debunce(pullDown, 300);
+    // eslint-disable-next-line
+  }, [pullDown]);
 
   // 在组件挂在后初始化bs实例， 传空数组只调用一次
   // 相当于ComponentDidMount
@@ -62,12 +103,13 @@ const Scroll = forwardRef((props, ref) => {
     if (!pullUp || !bScroll) return;
     bScroll.on('scrollEnd', () => {
       if (bScroll.y <= bScroll.maxScrollY + 100) {
-        pullUp();
+        pullUpDebunce();
       }
     });
     return () => {
       bScroll.off('scrollEnd');
     };
+    // eslint-disable-next-line
   }, [pullUp, bScroll]);
 
   // 绑定下拉加载回调
@@ -75,12 +117,13 @@ const Scroll = forwardRef((props, ref) => {
     if (!pullDown || !bScroll) return;
     bScroll.on('touchEnd', pos => {
       if (pos.y > 50) {
-        pullDown();
+        pullDownDebunce();
       }
     });
     return () => {
       bScroll.off('touchEnd');
     };
+    // eslint-disable-next-line
   }, [pullDown, bScroll]);
 
   // 每次渲染调用refresh
@@ -105,7 +148,22 @@ const Scroll = forwardRef((props, ref) => {
     }
   }));
 
-  return <ScrollContainer ref={scrollContainerRef}>{props.children}</ScrollContainer>;
+  return (
+    <ScrollContainer ref={scrollContainerRef}>
+      {props.children}
+      {pullUpLoading ? (
+        <PullUpLoading>
+          <Loading></Loading>
+        </PullUpLoading>
+      ) : null}
+
+      {pullDownLoading ? (
+        <PullDownLoading>
+          <Loading2></Loading2>
+        </PullDownLoading>
+      ) : null}
+    </ScrollContainer>
+  );
 });
 
 // 参数的类型
