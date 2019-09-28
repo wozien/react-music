@@ -4,7 +4,6 @@ import CommonStyle from '../../assets/styles/common';
 export const SliderContainer = styled.div`
   position: relative;
   box-sizing: border-box;
-  background: white;
   .before {
     position: absolute;
     top: -300px;

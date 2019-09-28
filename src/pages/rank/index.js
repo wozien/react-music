@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { getRankList } from './store';
 import { Container, List, ListItem, SongList } from './style';
 import Scroll from '../../common/scroll';
-import { filterIndex } from '../../api/utils';
+import { filterIndex, findIdx } from '../../api/utils';
 import Loading from '../../common/loading';
 
 function Rank(props) {
@@ -18,6 +18,15 @@ function Rank(props) {
     }
     // eslint-disable-next-line
   }, []);
+
+  const enterDetail = name => {
+    const id = findIdx(name);
+    if (id === null) {
+      alert('暂无相关数据');
+      return;
+    }
+    // 后续操作
+  };
 
   const renderSongList = list => {
     return list.length ? (
@@ -38,7 +47,11 @@ function Rank(props) {
       <List global={global}>
         {list.map(item => {
           return (
-            <ListItem key={item.coverImgId} tracks={item.tracks}>
+            <ListItem
+              key={item.coverImgId}
+              tracks={item.tracks}
+              onClick={() => enterDetail(item.name)}
+            >
               <div className="img-wrapper">
                 <img src={item.coverImgUrl} alt="" />
                 <div className="decorate"></div>

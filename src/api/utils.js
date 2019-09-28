@@ -1,3 +1,5 @@
+import { RankTypes } from './config';
+
 export const getCount = count => {
   if (count < 0) return;
   if (count < 10000) {
@@ -29,4 +31,20 @@ export const filterIndex = rankList => {
       return i + 1;
     }
   }
+};
+
+export const findIdx = name => {
+  for (let key in RankTypes) {
+    if (RankTypes[key] === name) return key;
+  }
+  return null;
+};
+
+// 拼接歌手名字
+export const getName = list => {
+  let str = '';
+  list.map((item, i) => {
+    str += i ? '/' + item.name : item.name;
+  });
+  return str;
 };
