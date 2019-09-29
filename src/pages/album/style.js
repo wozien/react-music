@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import CommonStyle from '../../assets/styles/common';
 
 export const Container = styled.div`
   position: fixed;
