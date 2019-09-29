@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { renderRoutes } from 'react-router-config';
 import { getRankList } from './store';
 import { Container, List, ListItem, SongList } from './style';
 import Scroll from '../../common/scroll';
-import { filterIndex, findIdx } from '../../api/utils';
+import { filterIndex } from '../../api/utils';
 import Loading from '../../common/loading';
 
 function Rank(props) {
@@ -19,13 +20,9 @@ function Rank(props) {
     // eslint-disable-next-line
   }, []);
 
-  const enterDetail = name => {
-    const id = findIdx(name);
-    if (id === null) {
-      alert('暂无相关数据');
-      return;
-    }
+  const enterDetail = detail => {
     // 后续操作
+    props.history.push(`/rank/${detail.id}`);
   };
 
   const renderSongList = list => {
@@ -47,11 +44,7 @@ function Rank(props) {
       <List global={global}>
         {list.map(item => {
           return (
-            <ListItem
-              key={item.coverImgId}
-              tracks={item.tracks}
-              onClick={() => enterDetail(item.name)}
-            >
+            <ListItem key={item.coverImgId} tracks={item.tracks} onClick={() => enterDetail(item)}>
               <div className="img-wrapper">
                 <img src={item.coverImgUrl} alt="" />
                 <div className="decorate"></div>
@@ -85,6 +78,7 @@ function Rank(props) {
           {loading ? <Loading></Loading> : null}
         </div>
       </Scroll>
+      {renderRoutes(props.route.routes)}
     </Container>
   );
 }

@@ -2,9 +2,13 @@ import React from 'react';
 import { ListWrapper, List } from './style';
 import { getName } from '../../api/utils';
 
-const SongList = React.forwardRef((props, ref) => {
-  const { songs, collectCount, showCollect } = props;
+const SongList = React.forwardRef((props, refs) => {
+  const { songs, collectCount, showCollect, showBackground } = props;
   const totalCount = songs.length;
+
+  const hanldeClick = (e, i) => {
+    console.log(i);
+  };
 
   const renderColleact = count => {
     return (
@@ -18,7 +22,7 @@ const SongList = React.forwardRef((props, ref) => {
   const renderListContent = list => {
     return list.map((item, index) => {
       return (
-        <li key={index}>
+        <li key={index} onClick={e => hanldeClick(e, index)}>
           <span className="index">{index + 1}</span>
           <div className="info">
             <span>{item.name}</span>
@@ -33,7 +37,7 @@ const SongList = React.forwardRef((props, ref) => {
   };
 
   return (
-    <ListWrapper>
+    <ListWrapper ref={refs} showBackground={showBackground}>
       <div className="first-line">
         <div className="play-all">
           <i className="iconfont">&#xe6e3;</i>

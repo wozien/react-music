@@ -43,7 +43,7 @@ export const findIdx = name => {
 // 拼接歌手名字
 export const getName = list => {
   let str = '';
-  list.map((item, i) => {
+  list.forEach((item, i) => {
     str += i ? '/' + item.name : item.name;
   });
   return str;
@@ -51,6 +51,5 @@ export const getName = list => {
 
 export const isEmptyObject = obj => {
   // eslint-disable-next-line
-
   return !obj || Object.keys(obj).length === 0;
 };

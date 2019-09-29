@@ -29,25 +29,29 @@ function Album(props) {
 
   const handleBack = useCallback(() => {
     setShowStatus(false);
-  });
+  }, []);
 
-  const handleScroll = useCallback(pos => {
-    let minScrollY = -45;
-    let percent = Math.abs(pos.y / minScrollY);
-    let headerDOM = headerEl.current;
+  const handleScroll = useCallback(
+    pos => {
+      let minScrollY = -45;
+      let percent = Math.abs(pos.y / minScrollY);
+      let headerDOM = headerEl.current;
 
-    if (pos.y < minScrollY) {
-      headerDOM.style.backgroundColor = CommonStyle['theme-color'];
-      headerDOM.style.opacity = Math.min(1, (percent - 1) / 2);
-      setTitle(currentAlbumJS.name);
-      setIsMarquee(true);
-    } else {
-      headerDOM.style.backgroundColor = '';
-      headerDOM.style.opacity = 1;
-      setTitle('歌单');
-      setIsMarquee(false);
-    }
-  });
+      if (pos.y < minScrollY) {
+        headerDOM.style.backgroundColor = CommonStyle['theme-color'];
+        headerDOM.style.opacity = Math.min(1, (percent - 1) / 2);
+        setTitle(currentAlbumJS.name);
+        setIsMarquee(true);
+      } else {
+        headerDOM.style.backgroundColor = '';
+        headerDOM.style.opacity = 1;
+        setTitle('歌单');
+        setIsMarquee(false);
+      }
+      // eslint-disable-next-line
+    },
+    [currentAlbumJS]
+  );
 
   return (
     <CSSTransition

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { renderRoutes } from 'react-router-config';
 import { actionCreators } from './store';
 import Horizen from '../../components/horizen-item';
 import { categoryTypes, alphaTypes } from '../../api/config';
@@ -33,6 +34,10 @@ function Singers(props) {
     pullDownRefresh(category, alpha);
   };
 
+  let enterDetail = id => {
+    props.history.push(`/singers/${id}`);
+  };
+
   useEffect(() => {
     if (!singerList.size && !category && !alpha) {
       getSingerListDispatch();
@@ -45,7 +50,7 @@ function Singers(props) {
       <List>
         {singerList.toJS().map((item, index) => {
           return (
-            <ListItem key={item.accountId + '' + index}>
+            <ListItem key={item.accountId + '' + index} onClick={() => enterDetail(item.id)}>
               <div className="img-wrapper">
                 <LazyLoad placeholder={<img src={require('./singer.png')} alt="" />}>
                   <img src={`${item.picUrl}?param=300x300`} alt="" />
@@ -87,6 +92,7 @@ function Singers(props) {
         </Scroll>
         {enterLoading ? <Loading></Loading> : null}
       </ListContainer>
+      {renderRoutes(props.route.routes)}
     </div>
   );
 }

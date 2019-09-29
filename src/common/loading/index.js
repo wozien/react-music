@@ -25,6 +25,7 @@ const LoadingWrapper = styled.div`
     border-radius: 50%;
     background-color: ${CommonStyle['theme-color']};
     animation: ${loading} 1.4s infinite ease-in;
+    z-index: 100;
   }
   > div:nth-child(2) {
     animation-delay: -0.7s;
