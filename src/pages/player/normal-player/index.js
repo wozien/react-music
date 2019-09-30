@@ -2,8 +2,9 @@ import React, { useRef } from 'react';
 import { getName } from '../../../api/utils';
 import { CSSTransition } from 'react-transition-group';
 import animations from 'create-keyframe-animation';
-import { prefixStyle } from '../../../api/utils';
+import { prefixStyle, formatPlayTime } from '../../../api/utils';
 import ProgressBar from '../../../common/progress-bar';
+import { playMode } from '../../../api/config';
 import { Container, Top, Middle, CDWrapper, ProgressWrapper, Bottom, Operators } from './style';
 
 const transform = prefixStyle('transform');
@@ -12,8 +13,15 @@ function NormalPlayer(props) {
   const normalRef = useRef();
   const cdRef = useRef();
 
-  const { song, full, playing, percent } = props;
-  const { toggleFullScreen, clickPlaying, onProgressChange } = props;
+  const { song, full, playing, percent, currentTime, duration, mode } = props;
+  const {
+    toggleFullScreen,
+    clickPlaying,
+    onProgressChange,
+    handlePrev,
+    handleNext,
+    changeMode
+  } = props;
 
   // 获取小唱片到大唱片中心的偏移
   const _getPosAndScale = () => {
@@ -75,6 +83,18 @@ function NormalPlayer(props) {
     normalRef.current.style.display = 'none';
   };
 
+  const getMode = () => {
+    let content;
+    if (mode === playMode.sequence) {
+      content = '&#xe625;';
+    } else if (mode === playMode.loop) {
+      content = '&#xe653;';
+    } else {
+      content = '&#xe61b;';
+    }
+    return content;
+  };
+
   return (
     <CSSTransition
       in={full}
@@ -111,17 +131,17 @@ function NormalPlayer(props) {
         </Middle>
         <Bottom className="bottom">
           <ProgressWrapper>
-            <div className="time time-l">0:00</div>
+            <div className="time time-l">{formatPlayTime(currentTime)}</div>
             <div className="progress-bar-wrapper">
               <ProgressBar percent={percent} percentChange={onProgressChange}></ProgressBar>
             </div>
-            <div className="time time-r">4:23</div>
+            <div className="time time-r">{formatPlayTime(duration)}</div>
           </ProgressWrapper>
           <Operators>
-            <div className="icon i-left">
-              <i className="iconfont">&#xe625;</i>
+            <div className="icon i-left" onClick={changeMode}>
+              <i className="iconfont" dangerouslySetInnerHTML={{ __html: getMode() }}></i>
             </div>
-            <div className="icon i-left">
+            <div className="icon i-left" onClick={handlePrev}>
               <i className="iconfont">&#xe6e1;</i>
             </div>
             <div className="icon i-center">
@@ -131,7 +151,7 @@ function NormalPlayer(props) {
                 dangerouslySetInnerHTML={{ __html: playing ? '&#xe723;' : '&#xe731;' }}
               ></i>
             </div>
-            <div className="icon i-right">
+            <div className="icon i-right" onClick={handleNext}>
               <i className="iconfont">&#xe718;</i>
             </div>
             <div className="icon i-right">

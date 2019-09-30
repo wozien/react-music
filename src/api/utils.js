@@ -88,3 +88,25 @@ export function prefixStyle(style) {
 export const getSongUrl = id => {
   return `https://music.163.com/song/media/outer/url?id=${id}.mp3`;
 };
+
+export const formatPlayTime = time => {
+  time = time | 0;
+  const minute = (time / 60) | 0;
+  const second = (time % 60).toString().padStart(2, '0');
+  return `${minute}:${second}`;
+};
+
+// 随机算法
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+export const shuffle = arr => {
+  let newArr = arr.slice();
+  for (let i = 0; i < newArr.length; i++) {
+    const j = getRandomInt(0, i);
+    let t = newArr[j];
+    newArr[j] = newArr[i];
+    newArr[i] = t;
+  }
+  return newArr;
+};
