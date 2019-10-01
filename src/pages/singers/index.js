@@ -13,7 +13,7 @@ function Singers(props) {
   const [category, setCategory] = useState('');
   const [alpha, setAlpha] = useState('');
 
-  const { singerList, pageCount, enterLoading, pullDownLoading, pullUpLoading } = props;
+  const { singerList, pageCount, enterLoading, pullDownLoading, pullUpLoading, songsCount } = props;
   const { getSingerListDispatch, updateDispatch, pullUpRefresh, pullDownRefresh } = props;
 
   let handleUpateCategory = val => {
@@ -80,7 +80,7 @@ function Singers(props) {
           curVal={alpha}
         ></Horizen>
       </NavContainer>
-      <ListContainer>
+      <ListContainer play={songsCount}>
         <Scroll
           pullUp={handlePullUp}
           pullDown={handlePullDown}
@@ -101,7 +101,8 @@ const mapState = state => ({
   pageCount: state.getIn(['singers', 'pageCount']),
   enterLoading: state.getIn(['singers', 'enterLoading']),
   pullUpLoading: state.getIn(['singers', 'pullUpLoading']),
-  pullDownLoading: state.getIn(['singers', 'pullDownLoading'])
+  pullDownLoading: state.getIn(['singers', 'pullDownLoading']),
+  songsCount: state.getIn(['player', 'playList']).size
 });
 
 const mapDispatch = dispatch => ({

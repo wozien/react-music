@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { TopDesc, Menu } from './style';
 import SongList from '../song-list';
+import MusciNote from '../../common/music-note';
 
 function AlbumDetail(props) {
+  const musicNoteRef = useRef();
   const { currentAlbum } = props;
 
   const renderTopDesc = () => {
@@ -55,6 +57,10 @@ function AlbumDetail(props) {
     );
   };
 
+  const musicAnimation = (x, y) => {
+    musicNoteRef.current.startAnimation({ x, y });
+  };
+
   const renderSongList = () => {
     return (
       <SongList
@@ -62,6 +68,7 @@ function AlbumDetail(props) {
         collectCount={currentAlbum.subscribedCount}
         showCollect={true}
         showBackground={true}
+        musicAnimation={musicAnimation}
       ></SongList>
     );
   };
@@ -71,6 +78,7 @@ function AlbumDetail(props) {
       {renderTopDesc()}
       {renderMenu()}
       {renderSongList()}
+      <MusciNote ref={musicNoteRef}></MusciNote>
     </div>
   );
 }

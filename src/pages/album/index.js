@@ -16,7 +16,7 @@ function Album(props) {
   const [isMarquee, setIsMarquee] = useState(false);
   const headerEl = useRef();
 
-  const { currentAlbum, enterLoading } = props;
+  const { currentAlbum, enterLoading, songsCount } = props;
   const { getAlbumDetailDispatch } = props;
 
   const id = props.match.params.id;
@@ -62,7 +62,7 @@ function Album(props) {
       appear={true}
       onExited={props.history.goBack}
     >
-      <Container>
+      <Container play={songsCount}>
         <AlbumHeader
           ref={headerEl}
           title={title}
@@ -82,7 +82,8 @@ function Album(props) {
 
 const mapState = state => ({
   enterLoading: state.getIn(['album', 'enterLoading']),
-  currentAlbum: state.getIn(['album', 'currentAlbum'])
+  currentAlbum: state.getIn(['album', 'currentAlbum']),
+  songsCount: state.getIn(['player', 'playList']).size
 });
 
 const mapDispatch = dispatch => ({

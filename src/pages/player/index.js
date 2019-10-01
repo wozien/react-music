@@ -11,6 +11,7 @@ function Player(props) {
   const [duration, setDuration] = useState(0); // 播放总时间
   const [preSong, setPreSong] = useState({});
   const [modeText, setModeText] = useState('');
+  const [songReady, setSongReady] = useState(true);
   const audioRef = useRef();
   const toastRef = useRef();
 
@@ -47,15 +48,20 @@ function Player(props) {
       currentIndex === -1 ||
       !playList.length ||
       !playList[currentIndex] ||
-      preSong.id === playList[currentIndex].id
+      preSong.id === playList[currentIndex].id ||
+      !songReady
     )
       return;
+
     let current = playList[currentIndex];
     changeCurrentDispatch(current);
     setPreSong(current);
+    setSongReady(false);
     audioRef.current.src = getSongUrl(current.id);
     setTimeout(() => {
-      audioRef.current.play();
+      audioRef.current.play().then(() => {
+        setSongReady(true);
+      });
     });
     togglePlayingState(true);
     setCurrentTime(0);
@@ -129,6 +135,7 @@ function Player(props) {
   };
 
   const handleError = () => {
+    setSongReady(true);
     console.log('播放错误');
   };
 

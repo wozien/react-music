@@ -13,7 +13,8 @@ const SongList = React.forwardRef((props, refs) => {
   const {
     changePlayListDispatch,
     changeSequecePlayListDispatch,
-    changeCurrentIndexDispatch
+    changeCurrentIndexDispatch,
+    musicAnimation
   } = props;
   const totalCount = songs.length;
 
@@ -21,6 +22,7 @@ const SongList = React.forwardRef((props, refs) => {
     changePlayListDispatch(songs);
     changeSequecePlayListDispatch(songs);
     changeCurrentIndexDispatch(index);
+    musicAnimation(e.nativeEvent.clientX, e.nativeEvent.clientY);
   };
 
   const renderColleact = count => {

@@ -10,7 +10,7 @@ import { Content } from './style';
 import Loading from '../../common/loading';
 
 function Recommend(props) {
-  const { bannerList, recommendList, loading } = props;
+  const { bannerList, recommendList, loading, songsCount } = props;
 
   const { getBannerDispath, getRecommendListDispatch } = props;
 
@@ -29,7 +29,7 @@ function Recommend(props) {
   const recommendListJS = recommendList ? recommendList.toJS() : [];
 
   return (
-    <Content>
+    <Content play={songsCount}>
       <Scroll className="list" onScroll={forceCheck}>
         <div>
           <Slider bannerList={bannerListJS}></Slider>
@@ -45,7 +45,8 @@ function Recommend(props) {
 const mapState = state => ({
   bannerList: state.getIn(['recommend', 'bannerList']),
   recommendList: state.getIn(['recommend', 'recommendList']),
-  loading: state.getIn(['recommend', 'loading'])
+  loading: state.getIn(['recommend', 'loading']),
+  songsCount: state.getIn(['player', 'playList']).size
 });
 
 const mapDispatch = dispatch => ({

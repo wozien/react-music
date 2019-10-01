@@ -6,13 +6,15 @@ import Header from '../../components/album-header';
 import Scroll from '../../common/scroll';
 import SongList from '../../components/song-list';
 import Loading from '../../common/loading';
+import MusicNote from '../../common/music-note';
 import { Container, ImgWrapper, CollectButton, SongListWrapper, BgLayer } from './style';
 
 function Singer(props) {
   const initHeight = useRef(0);
+  const musicNoteRef = useRef();
   const [showStatus, setShowStatus] = useState(true);
 
-  const { artist, hotSongs, enterLoading } = props;
+  const { artist, hotSongs, enterLoading, songsCount } = props;
   const { getSingerInfoDispatch } = props;
 
   const imgWrapper = useRef();
@@ -75,6 +77,10 @@ function Singer(props) {
     // eslint-disable-next-line
   }, []);
 
+  const musicAnimation = (x, y) => {
+    musicNoteRef.current.startAnimation({ x, y });
+  };
+
   const artistJS = artist ? artist.toJS() : {};
   const songs = hotSongs ? hotSongs.toJS() : [];
 
@@ -87,7 +93,7 @@ function Singer(props) {
       appear={true}
       onExited={props.history.goBack}
     >
-      <Container>
+      <Container play={songsCount}>
         <Header ref={header} title={artistJS.name} handleClick={handleBack}></Header>
         <ImgWrapper bgUrl={artistJS.picUrl} ref={imgWrapper}>
           <div className="filter"></div>
@@ -99,10 +105,11 @@ function Singer(props) {
         <BgLayer ref={layer}></BgLayer>
         <SongListWrapper ref={songListWrapper}>
           <Scroll ref={songScroll} onScroll={handleScroll}>
-            <SongList songs={songs} showCollect={false}></SongList>
+            <SongList songs={songs} showCollect={false} musicAnimation={musicAnimation}></SongList>
           </Scroll>
         </SongListWrapper>
         {enterLoading ? <Loading></Loading> : null}
+        <MusicNote ref={musicNoteRef}></MusicNote>
       </Container>
     </CSSTransition>
   );
@@ -111,7 +118,8 @@ function Singer(props) {
 const mapState = state => ({
   artist: state.getIn(['singer', 'artist']),
   hotSongs: state.getIn(['singer', 'hotSongs']),
-  enterLoading: state.getIn(['singer', 'enterLoading'])
+  enterLoading: state.getIn(['singer', 'enterLoading']),
+  songsCount: state.getIn(['player', 'playList']).size
 });
 
 const mapDispatch = dispatch => ({
