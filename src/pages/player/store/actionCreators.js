@@ -9,7 +9,6 @@ import {
   SET_SHOW_PLAYLIST
 } from './constants';
 import { fromJS } from 'immutable';
-import { getSongDetailRequest } from '../../../api/request';
 
 export const changeCurrentSong = data => ({
   type: SET_CURRENT_SONG,
