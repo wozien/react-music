@@ -10,7 +10,7 @@ function Home(props) {
     <div>
       <Top>
         <span className="iconfont menu">&#xe65c;</span>
-        <span>云音乐</span>
+        <span>云音悦</span>
         <span className="iconfont search">&#xe62b;</span>
       </Top>
       <Tab>

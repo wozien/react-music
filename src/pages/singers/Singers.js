@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { renderRoutes } from 'react-router-config';
 import { actionCreators } from './store';
-import Horizen from '../../components/horizen-item';
-import { categoryTypes, alphaTypes } from '../../api/config';
+import Horizen from '@/components/horizen-item';
+import { categoryTypes, alphaTypes } from '@/api/config';
 import { NavContainer, ListContainer, List, ListItem } from './style';
-import Scroll from '../../common/scroll';
-import Loading from '../../common/loading';
+import Scroll from '@/common/scroll';
+import Loading from '@/common/loading';
 import LazyLoad, { forceCheck } from 'react-lazyload';
 
 function Singers(props) {
@@ -70,13 +70,13 @@ function Singers(props) {
         <Horizen
           title="分类(默认热门):"
           list={categoryTypes}
-          handleClick={val => handleUpateCategory(val)}
+          handleClick={handleUpateCategory}
           curVal={category}
         ></Horizen>
         <Horizen
           title="首字母:"
           list={alphaTypes}
-          handleClick={val => handleUpateAlpha(val)}
+          handleClick={handleUpateAlpha}
           curVal={alpha}
         ></Horizen>
       </NavContainer>
@@ -96,6 +96,7 @@ function Singers(props) {
     </div>
   );
 }
+
 const mapState = state => ({
   singerList: state.getIn(['singers', 'singerList']),
   pageCount: state.getIn(['singers', 'pageCount']),

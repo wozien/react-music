@@ -1,3 +1,6 @@
+/**
+ * 轮播组件
+ */
 import React, { useState, useEffect } from 'react';
 import Swiper from 'swiper';
 import 'swiper/dist/css/swiper.css';

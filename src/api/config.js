@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const baseUrl = 'http://localhost:8080';
+export const baseUrl = 'http://106.52.117.111:8002';
 
 const axiosInstance = axios.create({
   baseURL: baseUrl
@@ -14,74 +14,108 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-export { axiosInstance };
-
 //歌手种类
-export const categoryTypes = [
+const categoryTypes = [
+  {
+    name: '全部',
+    key: '1000',
+    type: '-1',
+    area: '-1'
+  },
   {
     name: '华语男',
-    key: '1001'
+    key: '1001',
+    type: '1',
+    area: '7'
   },
   {
     name: '华语女',
-    key: '1002'
+    key: '1002',
+    type: '2',
+    area: '7'
   },
   {
     name: '华语组合',
-    key: '1003'
+    key: '1003',
+    type: '3',
+    area: '7'
   },
   {
     name: '欧美男',
-    key: '2001'
+    key: '2001',
+    type: '1',
+    area: '96'
   },
   {
     name: '欧美女',
-    key: '2002'
+    key: '2002',
+    type: '2',
+    area: '96'
   },
   {
     name: '欧美组合',
-    key: '2003'
+    key: '2003',
+    type: '3',
+    area: '96'
   },
   {
     name: '日本男',
-    key: '6001'
+    key: '6001',
+    type: '1',
+    area: '8'
   },
   {
     name: '日本女',
-    key: '6002'
+    key: '6002',
+    type: '2',
+    area: '8'
   },
   {
     name: '日本组合',
-    key: '6003'
+    key: '6003',
+    type: '3',
+    area: '8'
   },
   {
     name: '韩国男',
-    key: '7001'
+    key: '7001',
+    type: '1',
+    area: '16'
   },
   {
     name: '韩国女',
-    key: '7002'
+    key: '7002',
+    type: '2',
+    area: '16'
   },
   {
     name: '韩国组合',
-    key: '7003'
+    key: '7003',
+    type: '3',
+    area: '16'
   },
   {
     name: '其他男歌手',
-    key: '4001'
+    key: '4001',
+    type: '1',
+    area: '0'
   },
   {
     name: '其他女歌手',
-    key: '4002'
+    key: '4002',
+    type: '2',
+    area: '0'
   },
   {
     name: '其他组合',
-    key: '4003'
+    key: '4003',
+    type: '3',
+    area: '0'
   }
 ];
 
 // 歌手首字母
-export const alphaTypes = [
+const alphaTypes = [
   {
     key: 'A',
     name: 'A'
@@ -189,7 +223,7 @@ export const alphaTypes = [
 ];
 
 //排行榜编号
-export const RankTypes = {
+const RankTypes = {
   '0': '云音乐新歌榜',
   '1': '云音乐热歌榜',
   '2': '网易原创歌曲榜',
@@ -217,8 +251,16 @@ export const RankTypes = {
 };
 
 // 播放模式
-export const playMode = {
+const playMode = {
   sequence: 0,
   loop: 1,
   random: 2
 };
+
+export {
+  axiosInstance,
+  categoryTypes,
+  alphaTypes,
+  RankTypes,
+  playMode
+}

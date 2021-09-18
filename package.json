@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "PORT=8080 react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject"
   },
   "dependencies": {
@@ -26,6 +26,10 @@
     "redux-thunk": "^2.3.0",
     "styled-components": "^4.4.0",
     "swiper": "^4.5.1"
+  },
+  "devDependencies": {
+    "customize-cra": "^1.0.0",
+    "react-app-rewired": "^2.1.8"
   },
   "eslintConfig": {
     "extends": "react-app"

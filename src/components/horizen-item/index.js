@@ -69,18 +69,18 @@ function Horizen(props) {
   );
 }
 
-Horizen.defaultProps = {
-  list: [],
-  title: '',
-  curVal: '',
-  handleClick: null
-};
-
 Horizen.propTypes = {
   list: PropTypes.array,
   title: PropTypes.string,
   curVal: PropTypes.string,
   handleClick: PropTypes.func
+};
+
+Horizen.defaultProps = {
+  list: [],
+  title: '',
+  curVal: '',
+  handleClick: null
 };
 
 export default React.memo(Horizen);

@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { renderRoutes } from 'react-router-config';
 import { actionCreators } from './store';
 import { forceCheck } from 'react-lazyload';
-import Slider from '../../components/slider';
-import RecommendList from '../../components/list';
+import Slider from '../../components/slider/Slider';
+import RecommendList from '../../components/recommend-list/RecommendList';
 import Scroll from '../../common/scroll';
 import { Content } from './style';
 import Loading from '../../common/loading';
@@ -42,6 +42,7 @@ function Recommend(props) {
   );
 }
 
+// 映射 redux 全局的 state 到组件的 props
 const mapState = state => ({
   bannerList: state.getIn(['recommend', 'bannerList']),
   recommendList: state.getIn(['recommend', 'recommendList']),
@@ -49,6 +50,7 @@ const mapState = state => ({
   songsCount: state.getIn(['player', 'playList']).size
 });
 
+// 映射 dispatch 到 props 上
 const mapDispatch = dispatch => ({
   getBannerDispath() {
     dispatch(actionCreators.getBannerList());
@@ -58,6 +60,7 @@ const mapDispatch = dispatch => ({
   }
 });
 
+// 将 ui 组件包装成容器组件
 export default connect(
   mapState,
   mapDispatch

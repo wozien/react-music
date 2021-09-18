@@ -1,11 +1,11 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import Home from '../pages/home';
-import Recommend from '../pages/recommend';
-import Singers from '../pages/singers';
-import Rank from '../pages/rank';
-import Album from '../pages/album';
-import Singer from '../pages/singer';
+import Home from '@/pages/home/Home';
+import Recommend from '../pages/recommend/Recommend';
+import Singers from '../pages/singers/Singers';
+import Rank from '../pages/rank/Rank';
+import Album from '../pages/album/Album';
+import Singer from '../pages/singer/Singer';
 
 export default [
   {

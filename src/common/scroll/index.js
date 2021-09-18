@@ -112,7 +112,7 @@ const Scroll = forwardRef((props, ref) => {
     // eslint-disable-next-line
   }, [pullUp, bScroll]);
 
-  // 绑定下拉加载回调
+  // 绑定下拉刷新回调
   useEffect(() => {
     if (!pullDown || !bScroll) return;
     bScroll.on('touchEnd', pos => {

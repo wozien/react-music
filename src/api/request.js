@@ -1,4 +1,4 @@
-import { axiosInstance } from './config';
+import { axiosInstance, categoryTypes } from './config';
 
 // 获取banner
 export const getBannerRequest = () => {
@@ -17,8 +17,9 @@ export const getHotSingerListRequest = count => {
 
 // 获取分类的歌手
 export const getSingerListRequest = (category, alpha, count) => {
+  const {type, area} = categoryTypes.find(item => item.key === category)
   return axiosInstance.get(
-    `/artist/list?cat=${category}&initial=${alpha.toLowerCase()}&offset=${count}`
+    `/artist/list?type=${type}&area=${area}&initial=${alpha.toLowerCase()}&offset=${count}`
   );
 };
 
