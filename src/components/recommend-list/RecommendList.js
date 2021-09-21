@@ -39,4 +39,6 @@ function RecommendList(props) {
   );
 }
 
+// 因为组件时Recommend组件的子组件，无法直接
+// 从props中获取history对象， 需要withRouter包一下
 export default React.memo(withRouter(RecommendList));

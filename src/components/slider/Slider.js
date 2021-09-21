@@ -3,7 +3,8 @@
  */
 import React, { useState, useEffect } from 'react';
 import Swiper from 'swiper';
-import 'swiper/dist/css/swiper.css';
+// import 'swiper/dist/css/swiper.css';
+import 'swiper/swiper-bundle.css';
 import { SliderContainer } from './style';
 
 function Slider(props) {

@@ -19,7 +19,7 @@ function Album(props) {
   const { currentAlbum, enterLoading, songsCount } = props;
   const { getAlbumDetailDispatch } = props;
 
-  const id = props.match.params.id;
+  const id = props.match.params.id;   // 路由参数
   const currentAlbumJS = currentAlbum ? currentAlbum.toJS() : {};
 
   useEffect(() => {
