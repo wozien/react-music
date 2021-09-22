@@ -25,8 +25,10 @@ function Album(props) {
   useEffect(() => {
     getAlbumDetailDispatch(id);
     // eslint-disable-next-line
-  }, [id]);
+  }, [getAlbumDetailDispatch, id]);
 
+  // 传给子组件的回调函数最后用useCallback包裹，不然父组件每次执行
+  // 都会生成新的函数，造成子组件memo失效从而进行不必要渲染
   const handleBack = useCallback(() => {
     setShowStatus(false);
   }, []);

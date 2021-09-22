@@ -23,7 +23,7 @@ function Singer(props) {
   const songScroll = useRef();
   const layer = useRef();
   const header = useRef();
-  const OFFSET = 5; // 露出圆角的偏移
+  const OFFSET = 7; // 露出圆角的偏移
 
   useEffect(() => {
     const id = props.match.params.id;
@@ -45,6 +45,8 @@ function Singer(props) {
     const headerDOM = header.current;
     const minScrollY = -(h - OFFSET) + 45;
     const percent = Math.abs(newY / h);
+
+    console.log(newY)
 
     if (newY > 0) {
       imageDOM.style['transform'] = `scale(${1 + percent})`;
