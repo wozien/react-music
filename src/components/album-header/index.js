@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import CommonStyle from '../../assets/styles/common';
 
 const HeaderContainer = styled.div`
@@ -24,6 +24,25 @@ const HeaderContainer = styled.div`
   }
 `;
 
+const marquee = keyframes`
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+`;
+
+const Marquee = styled.div`
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  white-space: nowrap;
+  > h1 {
+    animation: ${marquee} 8s linear infinite;
+  }
+`;
+
 const AlbumHeader = React.forwardRef((props, refs) => {
   const { title, handleClick, isMarquee } = props;
 
@@ -33,9 +52,9 @@ const AlbumHeader = React.forwardRef((props, refs) => {
         &#xe655;
       </i>
       {isMarquee ? (
-        <marquee>
+        <Marquee>
           <h1>{title}</h1>
-        </marquee>
+        </Marquee>
       ) : (
         <h1>{title}</h1>
       )}
