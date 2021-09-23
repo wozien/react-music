@@ -11,7 +11,7 @@ const rotate = keyframes`
 `;
 
 export const Container = styled.div`
-  display: flex;
+  display: none;
   align-items: center;
   position: fixed;
   left: 0;

@@ -44,7 +44,7 @@ function ProgressBar(props) {
   const progress = useRef();
   const progressBtn = useRef();
 
-  const { percent } = props;
+  const { percent, percentChange } = props;
 
   useEffect(() => {
     if (percent >= 0 && percent <= 1 && !touch.init) {
@@ -53,6 +53,7 @@ function ProgressBar(props) {
       progress.current.style.width = `${offsetWidth}px`;
       progressBtn.current.style[transform] = `translate3d(${offsetWidth}px, 0 ,0)`;
     }
+    // eslint-disable-next-line
   }, [percent]);
 
   const _offset = offsetWidth => {
@@ -63,7 +64,7 @@ function ProgressBar(props) {
   const _changePercent = () => {
     const barWidth = progressBar.current.clientWidth - 16;
     const curPercent = progress.current.clientWidth / barWidth;
-    props.percentChange(curPercent);
+    percentChange(curPercent);
   };
 
   const progressTouchStart = e => {

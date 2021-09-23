@@ -5,7 +5,8 @@ import { getName } from '../../api/utils';
 import {
   changePlayList,
   changeSequecePlayList,
-  changeCurrentIndex
+  changeCurrentIndex,
+  changeFullScreen
 } from '../../pages/player/store/actionCreators';
 
 const SongList = React.forwardRef((props, refs) => {
@@ -14,6 +15,7 @@ const SongList = React.forwardRef((props, refs) => {
     changePlayListDispatch,
     changeSequecePlayListDispatch,
     changeCurrentIndexDispatch,
+    changeFullScreenDispatch,
     musicAnimation
   } = props;
   const totalCount = songs.length;
@@ -22,6 +24,7 @@ const SongList = React.forwardRef((props, refs) => {
     changePlayListDispatch(songs);
     changeSequecePlayListDispatch(songs);
     changeCurrentIndexDispatch(index);
+    changeFullScreenDispatch(true);
     musicAnimation(e.nativeEvent.clientX, e.nativeEvent.clientY);
   };
 
@@ -76,6 +79,9 @@ const mapDispatch = dispatch => ({
   },
   changeCurrentIndexDispatch(data) {
     dispatch(changeCurrentIndex(data));
+  },
+  changeFullScreenDispatch(data) {
+    dispatch(changeFullScreen(data));
   }
 });
 

@@ -6,7 +6,8 @@ import {
   SET_PLAYLIST,
   SET_PLAY_MODE,
   SET_CURRENT_INDEX,
-  SET_SHOW_PLAYLIST
+  SET_SHOW_PLAYLIST,
+  DELETE_SONG
 } from './constants';
 import { fromJS } from 'immutable';
 
@@ -47,5 +48,10 @@ export const changeCurrentIndex = data => ({
 
 export const changeShowPlayList = data => ({
   type: SET_SHOW_PLAYLIST,
+  data
+});
+
+export const deleteSong = (data) => ({
+  type: DELETE_SONG,
   data
 });

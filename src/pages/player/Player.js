@@ -2,15 +2,16 @@ import React, { useState, useRef, useEffect } from 'react';
 import { connect } from 'react-redux';
 import MiniPlayer from './mini-player';
 import NormalPlayer from './normal-player';
+import PlayList from './play-list';
 import Toast from '../../common/toast';
 import { actionCreators } from './store';
 import { isEmptyObject, getSongUrl, shuffle } from '../../api/utils';
 
 function Player(props) {
   const [currentTime, setCurrentTime] = useState(0); // 当前播放时间
-  const [duration, setDuration] = useState(0); // 播放总时间
-  const [preSong, setPreSong] = useState({});
-  const [modeText, setModeText] = useState('');
+  const [duration, setDuration] = useState(0); // 歌曲总时长
+  const [preSong, setPreSong] = useState({});  // 上一首歌曲
+  const [modeText, setModeText] = useState('');  // 播放模式
   const [songReady, setSongReady] = useState(true);
   const audioRef = useRef();
   const toastRef = useRef();
@@ -28,6 +29,7 @@ function Player(props) {
   const {
     toggleFullScreen,
     togglePlayingState,
+    togglePlayListDispatch,
     changeCurrentIndexDispatch,
     changeCurrentDispatch,
     changePlayListDispatch,
@@ -66,6 +68,7 @@ function Player(props) {
     togglePlayingState(true);
     setCurrentTime(0);
     setDuration((current.dt / 1000) | 0);
+    // eslint-disable-next-line
   }, [currentIndex, playList]);
 
   const _findIndex = (song, list) => {
@@ -136,7 +139,6 @@ function Player(props) {
 
   const handleError = () => {
     setSongReady(true);
-    console.log('播放错误');
   };
 
   const changeMode = () => {
@@ -174,6 +176,7 @@ function Player(props) {
           percent={percent}
           playing={playing}
           clickPlaying={clickPlaying}
+          togglePlayList={togglePlayListDispatch}
         ></MiniPlayer>
       )}
       {isEmptyObject(currentSong) ? null : (
@@ -191,6 +194,7 @@ function Player(props) {
           handleNext={handleNext}
           mode={mode}
           changeMode={changeMode}
+          togglePlayList={togglePlayListDispatch}
         ></NormalPlayer>
       )}
       <audio
@@ -199,12 +203,13 @@ function Player(props) {
         onEnded={handleEnd}
         onError={handleError}
       ></audio>
+      <PlayList></PlayList>
       <Toast text={modeText} ref={toastRef}></Toast>
     </div>
   );
 }
 
-const mapState = state => ({
+const mapStateToProps = state => ({
   fullScreen: state.getIn(['player', 'fullScreen']),
   playing: state.getIn(['player', 'playing']),
   currentIndex: state.getIn(['player', 'currentIndex']),
@@ -214,12 +219,15 @@ const mapState = state => ({
   sequencePlayList: state.getIn(['player', 'sequencePlayList'])
 });
 
-const mapDispatch = dispatch => ({
+const mapDispatchToProps = dispatch => ({
   toggleFullScreen(data) {
     dispatch(actionCreators.changeFullScreen(data));
   },
   togglePlayingState(data) {
     dispatch(actionCreators.changePlayingState(data));
+  },
+  togglePlayListDispatch(data) {
+    dispatch(actionCreators.changeShowPlayList(data));
   },
   changeCurrentIndexDispatch(index) {
     dispatch(actionCreators.changeCurrentIndex(index));
@@ -236,6 +244,6 @@ const mapDispatch = dispatch => ({
 });
 
 export default connect(
-  mapState,
-  mapDispatch
+  mapStateToProps,
+  mapDispatchToProps
 )(React.memo(Player));
