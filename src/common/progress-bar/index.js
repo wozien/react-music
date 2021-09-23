@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import CommonStyle from '../../assets/styles/common';
-import { prefixStyle } from '../../api/utils';
+import { prefixStyle } from '@/utils';
 
 const transform = prefixStyle('transform');
 

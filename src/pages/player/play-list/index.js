@@ -12,7 +12,7 @@ import {
   changePlayingState
  } from '../store/actionCreators'
 import { PlayListWrapper, ScrollWrapper, ListHeader, ListContent } from './style'
-import { prefixStyle, getName, findIndex, shuffle } from '@/api/utils';
+import { prefixStyle, getName, findIndex, shuffle } from '@/utils';
 import { playMode } from '@/api/config';
 import Scroll from '@/common/scroll';
 import Confirm from '@/common/confirm';

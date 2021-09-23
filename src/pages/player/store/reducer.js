@@ -1,7 +1,7 @@
 import * as types from './constants';
 import { fromJS } from 'immutable';
 import { playMode } from '../../../api/config';
-import { findIndex } from '@/api/utils'; 
+import { findIndex } from '@/utils'; 
 
 const handleDeleteSong = (state, song) => {
   //也可用loadsh库的deepClone方法。这里深拷贝是基于纯函数的考虑，不对参数state做修改

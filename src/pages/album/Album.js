@@ -8,7 +8,7 @@ import AlbumHeader from '../../components/album-header';
 import AlbumDetail from '../../components/album-detail';
 import CommonStyle from '../../assets/styles/common';
 import Loading from '../../common/loading';
-import { isEmptyObject } from '../../api/utils';
+import { isEmptyObject } from '@/utils';
 
 function Album(props) {
   const [showStatus, setShowStatus] = useState(true);

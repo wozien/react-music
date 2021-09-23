@@ -11,7 +11,7 @@ import BScroll from 'better-scroll';
 import styled from 'styled-components';
 import Loading from '../loading';
 import Loading2 from '../loading-v2';
-import { debunce } from '../../api/utils';
+import { debunce } from '@/utils';
 
 const ScrollContainer = styled.div`
   width: 100%;

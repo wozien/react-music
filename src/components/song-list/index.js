@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { ListWrapper, List } from './style';
-import { getName } from '../../api/utils';
+import { getName } from '@/utils';
 import {
   changePlayList,
   changeSequecePlayList,

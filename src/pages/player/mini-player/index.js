@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Container } from './style';
-import { getName } from '../../../api/utils';
+import { getName } from '@/utils';
 import { CSSTransition } from 'react-transition-group';
 import ProgressCircle from '../../../common/progress-circle';
 

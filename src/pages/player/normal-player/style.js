@@ -135,6 +135,14 @@ export const CDWrapper = styled.div`
       }
     }
   }
+  .playing_lyric {
+    margin-top: 20px;
+    font-size: 14px;
+    line-height: 20px;
+    white-space: normal;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+  }
 `;
 
 export const Bottom = styled.div`
@@ -197,5 +205,34 @@ export const Operators = styled.div`
   }
   .icon-favorite {
     color: ${CommonStyle['theme-color']};
+  }
+`;
+
+export const LyricContainer = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+`;
+export const LyricWrapper = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  p {
+    line-height: 32px;
+    color: rgba(255, 255, 255, 0.5);
+    white-space: normal;
+    font-size: ${CommonStyle["font-size-l"]};
+    &.current {
+      color: #fff;
+    }
+    &.pure {
+      position: relative;
+      top: 30vh;
+    }
   }
 `;

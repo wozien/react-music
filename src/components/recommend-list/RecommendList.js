@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import LazyLoad from 'react-lazyload';
-import { getCount } from '../../api/utils';
+import { getCount } from '@/utils';
 import { ListWrapper, List, ListItem } from './style';
 
 function RecommendList(props) {

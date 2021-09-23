@@ -4,7 +4,7 @@ import { renderRoutes } from 'react-router-config';
 import { getRankList } from './store';
 import { Container, List, ListItem, SongList } from './style';
 import Scroll from '../../common/scroll';
-import { filterIndex } from '../../api/utils';
+import { filterIndex } from '@/utils';
 import Loading from '../../common/loading';
 
 function Rank(props) {

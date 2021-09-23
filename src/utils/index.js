@@ -1,4 +1,4 @@
-import { RankTypes } from './config';
+import { RankTypes } from '@/api/config';
 
 export const getCount = count => {
   if (count < 0) return;

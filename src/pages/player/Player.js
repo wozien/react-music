@@ -5,7 +5,9 @@ import NormalPlayer from './normal-player';
 import PlayList from './play-list';
 import Toast from '../../common/toast';
 import { actionCreators } from './store';
-import { isEmptyObject, getSongUrl, shuffle } from '../../api/utils';
+import { isEmptyObject, getSongUrl, shuffle } from '@/utils';
+import Lyric from '@/utils/lyric-parse';
+import { getLyricRequest } from '@/api/request';
 
 function Player(props) {
   const [currentTime, setCurrentTime] = useState(0); // 当前播放时间
@@ -13,8 +15,11 @@ function Player(props) {
   const [preSong, setPreSong] = useState({});  // 上一首歌曲
   const [modeText, setModeText] = useState('');  // 播放模式
   const [songReady, setSongReady] = useState(true);
+  const [currentPlayingLyric, setPlayingLyric] = useState("");
   const audioRef = useRef();
   const toastRef = useRef();
+  const currentLyric = useRef();
+  const currentLineNum = useRef(0);
 
   const {
     fullScreen,
@@ -66,6 +71,7 @@ function Player(props) {
       });
     });
     togglePlayingState(true);
+    getLyric(current.id);
     setCurrentTime(0);
     setDuration((current.dt / 1000) | 0);
     // eslint-disable-next-line
@@ -75,9 +81,42 @@ function Player(props) {
     return list.findIndex(item => song.id === item.id);
   };
 
+  const handleLyric = ({lineNum, txt}) => {
+    if (!currentLyric.current) return;
+    currentLineNum.current = lineNum;
+    setPlayingLyric(txt);
+  };  
+
+  const getLyric = id => {
+    let lyric = "";
+    if (currentLyric.current) {
+      currentLyric.current.stop();
+    }
+    // 避免songReady恒为false的情况
+    getLyricRequest(id)
+      .then(data => {
+        lyric = data.lrc.lyric;
+        if(!lyric) {
+          currentLyric.current = null;
+          return;
+        }
+        currentLyric.current = new Lyric(lyric, handleLyric);
+        currentLyric.current.play();
+        currentLineNum.current = 0;
+        currentLyric.current.seek(0);
+      })
+      .catch(() => {
+        songReady.current = true;
+        audioRef.current.play();
+      });
+  };
+
   const clickPlaying = (e, state) => {
     e.stopPropagation();
     togglePlayingState(state);
+    if(currentLyric.current) {
+      currentLyric.current.togglePlay(currentTime * 1000);
+    }
   };
 
   const updateTime = e => {
@@ -90,6 +129,9 @@ function Player(props) {
     audioRef.current.currentTime = newTime;
     if (!playing) {
       togglePlayingState(true);
+    }
+    if(currentLyric.current) {
+      currentLyric.current.seek(newTime * 1000);
     }
   };
 
@@ -195,6 +237,9 @@ function Player(props) {
           mode={mode}
           changeMode={changeMode}
           togglePlayList={togglePlayListDispatch}
+          currentLyric={currentLyric.current}
+          currentPlayingLyric={currentPlayingLyric}
+          currentLineNum={currentLineNum.current}
         ></NormalPlayer>
       )}
       <audio

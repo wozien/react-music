@@ -1,6 +1,6 @@
 import React, { forwardRef, useRef, useEffect, useImperativeHandle } from 'react';
 import styled from 'styled-components';
-import { prefixStyle } from '../../api/utils';
+import { prefixStyle } from '@/utils';
 import CommonStyle from '../../assets/styles/common';
 
 const transform = prefixStyle('transform');
