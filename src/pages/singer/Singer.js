@@ -46,8 +46,6 @@ function Singer(props) {
     const minScrollY = -(h - OFFSET) + 45;
     const percent = Math.abs(newY / h);
 
-    console.log(newY)
-
     if (newY > 0) {
       imageDOM.style['transform'] = `scale(${1 + percent})`;
       collectDOM.style['transform'] = `translate3d(0, ${newY}px, 0)`;

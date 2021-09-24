@@ -12,7 +12,7 @@ export const getCount = count => {
 };
 
 // 防抖
-export const debunce = (func, delay) => {
+export const debounce = (func, delay) => {
   let timer;
   return function(...arg) {
     if (timer) {

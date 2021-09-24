@@ -106,7 +106,7 @@ function Player(props) {
         currentLyric.current.seek(0);
       })
       .catch(() => {
-        songReady.current = true;
+        setSongReady(true)
         audioRef.current.play();
       });
   };

@@ -11,7 +11,7 @@ import BScroll from 'better-scroll';
 import styled from 'styled-components';
 import Loading from '../loading';
 import Loading2 from '../loading-v2';
-import { debunce } from '@/utils';
+import { debounce } from '@/utils';
 
 const ScrollContainer = styled.div`
   width: 100%;
@@ -58,12 +58,12 @@ const Scroll = forwardRef((props, ref) => {
   const { onScroll, pullDown, pullUp } = props;
 
   let pullUpDebunce = useMemo(() => {
-    return debunce(pullUp, 300);
+    return debounce(pullUp, 300);
     // eslint-disable-next-line
   }, [pullUp]);
 
   let pullDownDebunce = useMemo(() => {
-    return debunce(pullDown, 300);
+    return debounce(pullDown, 300);
     // eslint-disable-next-line
   }, [pullDown]);
 

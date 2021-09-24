@@ -15,7 +15,6 @@ const SongList = React.forwardRef((props, refs) => {
     changePlayListDispatch,
     changeSequecePlayListDispatch,
     changeCurrentIndexDispatch,
-    changeFullScreenDispatch,
     musicAnimation
   } = props;
   const totalCount = songs.length;
@@ -24,7 +23,6 @@ const SongList = React.forwardRef((props, refs) => {
     changePlayListDispatch(songs);
     changeSequecePlayListDispatch(songs);
     changeCurrentIndexDispatch(index);
-    changeFullScreenDispatch(true);
     musicAnimation(e.nativeEvent.clientX, e.nativeEvent.clientY);
   };
 
