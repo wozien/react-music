@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { HashRouter } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 // 把路由配置转为Route组件
 import { renderRoutes } from 'react-router-config';  
 import { GlobalStyle } from './style';
@@ -12,12 +12,12 @@ import store from './store';
 function App() {
   return (
     <Provider store={store}>
-      <HashRouter>
+      <Router>
         <GlobalStyle />
         <IconStyle />
         {renderRoutes(routes)}
         <Player></Player>
-      </HashRouter>
+      </Router>
     </Provider>
   );
 }

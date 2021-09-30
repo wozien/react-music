@@ -17,10 +17,18 @@ export const getHotSingerListRequest = count => {
 
 // 获取分类的歌手
 export const getSingerListRequest = (category, alpha, count) => {
-  const {type, area} = categoryTypes.find(item => item.key === category)
-  return axiosInstance.get(
-    `/artist/list?type=${type}&area=${area}&initial=${alpha.toLowerCase()}&offset=${count}`
-  );
+  const query = {
+    initial: alpha.toLowerCase(),
+    offset:count
+  }
+  if(category) {
+    const {type, area} = categoryTypes.find(item => item.key === category);
+    query.type = type;
+    query.area = area;
+  }
+  
+  const queryString = Object.entries(query).map(([key, val]) => `${key}=${val}`).join('&');
+  return axiosInstance.get(`/artist/list?${queryString}`);
 };
 
 // 获取排行榜数据

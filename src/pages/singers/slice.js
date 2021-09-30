@@ -1,31 +1,38 @@
-import { fromJS } from 'immutable';
-import { getHotSingerListRequest, getSingerListRequest } from '../../../api/request';
-import * as types from './constants';
+import { createSlice } from '@reduxjs/toolkit'
+import { getHotSingerListRequest, getSingerListRequest } from '@/api/request';
 
-const changeSingerList = data => ({
-  type: types.CHANGE_SINGER_LIST,
-  data: fromJS(data)
-});
+const slice = createSlice({
+  name: 'singers',
+  initialState: {
+    singerList: [],
+    pageCount: 0,
+    enterLoading: true,
+    pullUpLoading: false,
+    pullDownLoading: false
+  },
+  reducers: {
+    changeSingerList(state, { payload }) {
+      state.singerList = payload
+    },
+    changePageCount(state, { payload }) {
+      state.pageCount = payload
+    },
+    changeEnterLoading(state, { payload }) {
+      state.enterLoading = payload
+    },
+    changePullUpLoading(state, { payload }) {
+      state.pullUpLoading = payload
+    },
+    changePullDownLoading(state, { payload }) {
+      state.pullDownLoading = payload
+    }
+  }
+})
 
-export const changePageCount = data => ({
-  type: types.CHANGE_PAGE_COUNT,
-  data
-});
+export const { 
+  changeSingerList, changePageCount, changeEnterLoading, changePullUpLoading, changePullDownLoading 
+} = slice.actions
 
-export const changeEnterLoading = data => ({
-  type: types.CHANGE_ENTER_LOADING,
-  data
-});
-
-export const changePullUpLoading = data => ({
-  type: types.CHANGE_PULLUP_LOADING,
-  data
-});
-
-export const changePullDownLoading = data => ({
-  type: types.CHANGE_PULLDOWM_LOADING,
-  data
-});
 
 // 第一次获取热门歌手
 export const getHotSingerList = () => {
@@ -61,11 +68,8 @@ export const getSingerList = (category, alpha) => {
 
 export const getMoreHotSingerList = () => {
   return (dispatch, getState) => {
-    const count = getState().getIn(['singers', 'pageCount']);
-    const singerList = getState()
-      .getIn(['singers', 'singerList'])
-      .toJS();
-    getHotSingerListRequest(count)
+    const { pageCount, singerList } = getState().singers;
+    getHotSingerListRequest(pageCount)
       .then(res => {
         const data = [...singerList, ...res.artists];
         dispatch(changeSingerList(data));
@@ -79,11 +83,9 @@ export const getMoreHotSingerList = () => {
 
 export const getMoreSingerList = (category, alpha) => {
   return (dispatch, getState) => {
-    const count = getState().getIn(['singers', 'pageCount']);
-    const singerList = getState()
-      .getIn(['singers', 'singerList'])
-      .toJS();
-    getSingerListRequest(category, alpha, count)
+    const { pageCount, singerList } = getState().singers;
+
+    getSingerListRequest(category, alpha, pageCount)
       .then(res => {
         const data = [...singerList, ...res.artists];
         dispatch(changeSingerList(data));
@@ -94,3 +96,5 @@ export const getMoreSingerList = (category, alpha) => {
       });
   };
 };
+
+export default slice.reducer

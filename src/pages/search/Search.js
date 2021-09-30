@@ -1,14 +1,14 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { CSSTransition } from 'react-transition-group'
 import { Container, HotKey, ShortcutWrapper, List, ListItem, SongItem } from './style'
 import SearchBox from '@/components/search-box'
 import {
   getHotKeyWords,
   getSuggestList,
-  changeEnterLoading
-} from './store/actionCreators'
-import { getSongDetail } from '../player/store/actionCreators'
+  changeEnterLoading,
+} from './slice'
+import { getSongDetail } from '@/pages/player/slice'
 import Scroll from '@/common/scroll'
 import Loading from '@/common/loading'
 import MusicNote from '@/common/music-note'
@@ -22,26 +22,18 @@ function Search(props) {
 
   const {
     hotList,
-    suggestList: immutableSuggestList,
-    songsList: immutableSongsList,
-    enterLoading,
-    songsCount
-  } = props
+    suggestList,
+    songsList,
+    enterLoading
+  } = useSelector(state => state.search);
+  const songsCount = useSelector(state => state.player.playList.length);
 
-  const {
-    getHotKeyWordsDispatch,
-    getSuggestListDispatch,
-    changeEnterLoadingDispatch,
-    getSongDetailDispatch
-  } = props
-
-  const songsList = immutableSongsList.toJS()
-  const suggestList = immutableSuggestList.toJS()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     setShow(true)
     if(!hotList.size) {
-      getHotKeyWordsDispatch()
+      dispatch(getHotKeyWords())
     }
     // eslint-disable-next-line
   }, [])
@@ -53,21 +45,20 @@ function Search(props) {
   const handleQuery = (q) => {
     setQuery(q)
     if(!q) return
-    changeEnterLoadingDispatch(true)
-    getSuggestListDispatch(q)
+    dispatch(changeEnterLoading(true));
+    dispatch(getSuggestList(q));
   }
 
   const selectItem = (e, id) => {
-    getSongDetailDispatch(id)
+    dispatch(getSongDetail(id));
     musicNoteRef.current.startAnimation({x: e.nativeEvent.clientX, y: e.nativeEvent.clientY})
   }
 
   const renderHotKey = () => {
-    const list = hotList ? hotList.toJS() : []
     return (
       <ul>
         {
-          list.map(item => {
+          hotList.map(item => {
             return (
               <li className="item" key={item.first} onClick={() => setQuery(item.first)}>
                 <span>{item.first}</span>
@@ -187,30 +178,4 @@ function Search(props) {
   )
 }
 
-const mapStateToProps = state => ({
-  hotList: state.getIn(['search', 'hotList']),
-  enterLoading: state.getIn(['search', 'enterLoading']),
-  suggestList: state.getIn(['search', 'suggestList']),
-  songsCount: state.getIn(['player', 'playList']).size,
-  songsList: state.getIn(['search', 'songsList'])
-})
-
-const mapDispatchToProps = dispatch => ({
-  getHotKeyWordsDispatch() {
-    dispatch(getHotKeyWords());
-  },
-  changeEnterLoadingDispatch(data) {
-    dispatch(changeEnterLoading(data))
-  },
-  getSuggestListDispatch(data) {
-    dispatch(getSuggestList(data));
-  },
-  getSongDetailDispatch(id) {
-    dispatch(getSongDetail(id));
-  }
-})
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(React.memo(Search))
+export default React.memo(Search)

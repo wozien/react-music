@@ -1,22 +1,20 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {useDispatch } from 'react-redux';
 import { ListWrapper, List } from './style';
 import { getName } from '@/utils';
 import {
   changePlayList,
   changeSequecePlayList,
-  changeCurrentIndex,
-  changeFullScreen
-} from '../../pages/player/store/actionCreators';
+  changeCurrentIndex
+ } from '@/pages/player/slice';
 
 const SongList = React.forwardRef((props, refs) => {
-  const { songs, collectCount, showCollect, showBackground } = props;
-  const {
-    changePlayListDispatch,
-    changeSequecePlayListDispatch,
-    changeCurrentIndexDispatch,
-    musicAnimation
-  } = props;
+  const { songs, collectCount, showCollect, showBackground, musicAnimation } = props;
+
+  const dispatch = useDispatch();
+  const changePlayListDispatch = list => dispatch(changePlayList(list));
+  const changeSequecePlayListDispatch = list => dispatch(changeSequecePlayList(list));
+  const changeCurrentIndexDispatch = index => dispatch(changeCurrentIndex(index));
   const totalCount = songs.length;
 
   const selectItem = (e, index) => {
@@ -68,22 +66,4 @@ const SongList = React.forwardRef((props, refs) => {
   );
 });
 
-const mapDispatch = dispatch => ({
-  changePlayListDispatch(data) {
-    dispatch(changePlayList(data));
-  },
-  changeSequecePlayListDispatch(data) {
-    dispatch(changeSequecePlayList(data));
-  },
-  changeCurrentIndexDispatch(data) {
-    dispatch(changeCurrentIndex(data));
-  },
-  changeFullScreenDispatch(data) {
-    dispatch(changeFullScreen(data));
-  }
-});
-
-export default connect(
-  null,
-  mapDispatch
-)(React.memo(SongList));
+export default React.memo(SongList);

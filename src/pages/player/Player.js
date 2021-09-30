@@ -1,10 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { 
+  changeCurrentIndex,
+  changePlayMode,
+  changeFullScreen,
+  changePlayingState,
+  changePlayList,
+  changeCurrentSong,
+  changeShowPlayList
+ } from './slice';
 import MiniPlayer from './mini-player';
 import NormalPlayer from './normal-player';
 import PlayList from './play-list';
 import Toast from '../../common/toast';
-import { actionCreators } from './store';
 import { isEmptyObject, getSongUrl, shuffle } from '@/utils';
 import Lyric from '@/utils/lyric-parse';
 import { getLyricRequest } from '@/api/request';
@@ -21,29 +29,18 @@ function Player(props) {
   const currentLyric = useRef();
   const currentLineNum = useRef(0);
 
-  const {
-    fullScreen,
-    playing,
-    currentIndex,
-    currentSong: immutableCurrentSong,
-    playList: immutablePlayList,
-    mode,
-    sequencePlayList: immutableSequencePlayList
-  } = props;
+  const { 
+    fullScreen, playing, currentIndex, currentSong, playList, mode, sequencePlayList 
+  } = useSelector(state => state.player)
 
-  const {
-    toggleFullScreen,
-    togglePlayingState,
-    togglePlayListDispatch,
-    changeCurrentIndexDispatch,
-    changeCurrentDispatch,
-    changePlayListDispatch,
-    changeModeDispatch
-  } = props;
-
-  let currentSong = immutableCurrentSong.toJS();
-  let playList = immutablePlayList.toJS();
-  let sequencePlayList = immutableSequencePlayList.toJS();
+  const dispatch = useDispatch();
+  const toggleFullScreen = data => dispatch(changeFullScreen(data));
+  const togglePlayingState = data => dispatch(changePlayingState(data));
+  const togglePlayListDispatch = data => dispatch(changeShowPlayList(data));
+  const changeCurrentIndexDispatch = index => dispatch(changeCurrentIndex(index));
+  const changeCurrentDispatch = song => dispatch(changeCurrentSong(song));
+  const changePlayListDispatch = list => dispatch(changePlayList(list));
+  const changeModeDispatch = mode => dispatch(changePlayMode(mode));
   let percent = isNaN(currentTime / duration) ? 0 : currentTime / duration;
 
   useEffect(() => {
@@ -254,41 +251,4 @@ function Player(props) {
   );
 }
 
-const mapStateToProps = state => ({
-  fullScreen: state.getIn(['player', 'fullScreen']),
-  playing: state.getIn(['player', 'playing']),
-  currentIndex: state.getIn(['player', 'currentIndex']),
-  currentSong: state.getIn(['player', 'currentSong']),
-  playList: state.getIn(['player', 'playList']),
-  mode: state.getIn(['player', 'mode']),
-  sequencePlayList: state.getIn(['player', 'sequencePlayList'])
-});
-
-const mapDispatchToProps = dispatch => ({
-  toggleFullScreen(data) {
-    dispatch(actionCreators.changeFullScreen(data));
-  },
-  togglePlayingState(data) {
-    dispatch(actionCreators.changePlayingState(data));
-  },
-  togglePlayListDispatch(data) {
-    dispatch(actionCreators.changeShowPlayList(data));
-  },
-  changeCurrentIndexDispatch(index) {
-    dispatch(actionCreators.changeCurrentIndex(index));
-  },
-  changeCurrentDispatch(song) {
-    dispatch(actionCreators.changeCurrentSong(song));
-  },
-  changePlayListDispatch(list) {
-    dispatch(actionCreators.changePlayList(list));
-  },
-  changeModeDispatch(mode) {
-    dispatch(actionCreators.changePlayMode(mode));
-  }
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(React.memo(Player));
+export default React.memo(Player);

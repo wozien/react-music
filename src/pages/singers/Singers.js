@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { renderRoutes } from 'react-router-config';
-import { actionCreators } from './store';
+import {
+  changeEnterLoading,
+  changePullDownLoading,
+  changePageCount,
+  changePullUpLoading,
+  getHotSingerList,
+  getSingerList,
+  getMoreHotSingerList,
+  getMoreSingerList
+} from './slice';
 import Horizen from '@/components/horizen-item';
 import { categoryTypes, alphaTypes } from '@/api/config';
 import { NavContainer, ListContainer, List, ListItem } from './style';
@@ -13,8 +22,34 @@ function Singers(props) {
   const [category, setCategory] = useState('');
   const [alpha, setAlpha] = useState('');
 
-  const { singerList, pageCount, enterLoading, pullDownLoading, pullUpLoading, songsCount } = props;
-  const { getSingerListDispatch, updateDispatch, pullUpRefresh, pullDownRefresh } = props;
+  const { singerList, pageCount, enterLoading, pullDownLoading, pullUpLoading } = useSelector(state => state.singers);
+  const songsCount = useSelector(state => state.player.playList.length);
+
+  const dispatch = useDispatch();
+  const getSingerListDispatch = () => dispatch(getHotSingerList());
+  const updateDispatch = (category, alpha) => {
+    dispatch(changePageCount(0));
+    dispatch(changeEnterLoading(true));
+    dispatch(getSingerList(category, alpha));
+  }
+  const pullUpRefresh = (category, alpha, hot, count) => {
+    dispatch(changePullUpLoading(true));
+    dispatch(changePageCount(count + 1));
+    if (hot) {
+      dispatch(getMoreHotSingerList());
+    } else {
+      dispatch(getMoreSingerList(category, alpha));
+    }
+  }
+  const pullDownRefresh = (category, alpha) => {
+    dispatch(changePullDownLoading(true));
+    dispatch(changePageCount(0));
+    if (category === '' && alpha === '') {
+      dispatch(getHotSingerList());
+    } else {
+      dispatch(getSingerList(category, alpha));
+    }
+  }
 
   let handleUpateCategory = val => {
     setCategory(val);
@@ -48,7 +83,7 @@ function Singers(props) {
   const renderSingerList = () => {
     return (
       <List>
-        {singerList.toJS().map((item, index) => {
+        {singerList.map((item, index) => {
           return (
             <ListItem key={item.accountId + '' + index} onClick={() => enterDetail(item.id)}>
               <div className="img-wrapper">
@@ -97,45 +132,4 @@ function Singers(props) {
   );
 }
 
-const mapState = state => ({
-  singerList: state.getIn(['singers', 'singerList']),
-  pageCount: state.getIn(['singers', 'pageCount']),
-  enterLoading: state.getIn(['singers', 'enterLoading']),
-  pullUpLoading: state.getIn(['singers', 'pullUpLoading']),
-  pullDownLoading: state.getIn(['singers', 'pullDownLoading']),
-  songsCount: state.getIn(['player', 'playList']).size
-});
-
-const mapDispatch = dispatch => ({
-  getSingerListDispatch() {
-    dispatch(actionCreators.getHotSingerList());
-  },
-  updateDispatch(category, alpha) {
-    dispatch(actionCreators.changePageCount(0));
-    dispatch(actionCreators.changeEnterLoading(true));
-    dispatch(actionCreators.getSingerList(category, alpha));
-  },
-  pullUpRefresh(category, alpha, hot, count) {
-    dispatch(actionCreators.changePullUpLoading(true));
-    dispatch(actionCreators.changePageCount(count + 1));
-    if (hot) {
-      dispatch(actionCreators.getMoreHotSingerList());
-    } else {
-      dispatch(actionCreators.getMoreSingerList(category, alpha));
-    }
-  },
-  pullDownRefresh(category, alpha) {
-    dispatch(actionCreators.changePullDownLoading(true));
-    dispatch(actionCreators.changePageCount(0));
-    if (category === '' && alpha === '') {
-      dispatch(actionCreators.getHotSingerList());
-    } else {
-      dispatch(actionCreators.getSingerList(category, alpha));
-    }
-  }
-});
-
-export default connect(
-  mapState,
-  mapDispatch
-)(React.memo(Singers));
+export default React.memo(Singers);

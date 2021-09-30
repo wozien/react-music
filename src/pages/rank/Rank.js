@@ -1,21 +1,20 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { renderRoutes } from 'react-router-config';
-import { getRankList } from './store';
+import { getRankList } from './slice';
 import { Container, List, ListItem, SongList } from './style';
 import Scroll from '../../common/scroll';
 import { filterIndex } from '@/utils';
 import Loading from '../../common/loading';
 
 function Rank(props) {
-  const { rankList: list, loading, songsCount } = props;
-  const { getRankListDispatch } = props;
-
-  const rankList = list ? list.toJS() : [];
+  const { rankList, loading } = useSelector(state => state.rank);
+  const songsCount = useSelector(state => state.player.playList.length);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!rankList.length) {
-      getRankListDispatch();
+      dispatch(getRankList());
     }
     // eslint-disable-next-line
   }, []);
@@ -83,19 +82,4 @@ function Rank(props) {
   );
 }
 
-const mapState = state => ({
-  rankList: state.getIn(['rank', 'rankList']),
-  loading: state.getIn(['rank', 'loading']),
-  songsCount: state.getIn(['player', 'playList']).size
-});
-
-const mapDispatch = dispatch => ({
-  getRankListDispatch() {
-    dispatch(getRankList());
-  }
-});
-
-export default connect(
-  mapState,
-  mapDispatch
-)(React.memo(Rank));
+export default React.memo(Rank);

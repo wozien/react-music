@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { CSSTransition } from 'react-transition-group'; 
 import { 
   changeShowPlayList,
@@ -9,8 +9,9 @@ import {
   deleteSong,
   changeSequecePlayList,
   changeCurrentSong,
-  changePlayingState
- } from '../store/actionCreators'
+  changePlayingState,
+  changeFullScreen
+ } from '../slice';
 import { PlayListWrapper, ScrollWrapper, ListHeader, ListContent } from './style'
 import { prefixStyle, getName, findIndex, shuffle } from '@/utils';
 import { playMode } from '@/api/config';
@@ -31,26 +32,31 @@ function PlayList(props) {
   const listContentRef = useRef()
   const confirmRef = useRef()
 
-  const {
-    currentIndex,
-    currentSong: immutableCurrentSong,
-    showPlayList,
-    playList: immutablePlayList,
-    mode,
-    sequencePlayList: immutableSequencePlayList
- } = props;
   const { 
-    togglePlayListDispatch ,
-    changeCurrentIndexDispatch,
-    changePlayListDispatch,
-    changeModeDispatch,
-    deleteSongDispatch,
-    clearDispatch
-  } = props;
+    currentIndex, currentSong, showPlayList, playList, mode, sequencePlayList 
+  } = useSelector(state => state.player);
+
+  const dispatch = useDispatch();
+  const togglePlayListDispatch = data => dispatch(changeShowPlayList(data));
+  const changeCurrentIndexDispatch = data => dispatch(changeCurrentIndex(data));
+  const changePlayListDispatch = data => dispatch(changePlayList(data));
+  const changeModeDispatch = data => dispatch(changePlayMode(data));
+  const deleteSongDispatch = data => dispatch(deleteSong(data));
+  const clearDispatch = () => {
+    // 1. 清空两个列表
+    dispatch(changePlayList ([]));
+    dispatch(changeSequecePlayList ([]));
+    // 2. 初始 currentIndex
+    dispatch(changeCurrentIndex (-1));
+    // 3. 关闭 PlayList 的显示
+    dispatch(changeShowPlayList (false));
+    // 4. 将当前歌曲置空
+    dispatch(changeCurrentSong ({}));
+    // 5. 重置播放状态
+    dispatch(changePlayingState (false));
+    dispatch(changeFullScreen(false));
+  }
   const transform = prefixStyle('transform');
-  const currentSong = immutableCurrentSong.toJS ();
-  const playList = immutablePlayList.toJS ();
-  const sequencePlayList = immutableSequencePlayList.toJS ();
 
   const onEnterCB = useCallback(() => {
     setIsShow(true);
@@ -245,50 +251,4 @@ function PlayList(props) {
   )
 }
 
-const mapStateToProps = state => ({
-  currentIndex: state.getIn(['player', 'currentIndex']),
-  currentSong: state.getIn(['player', 'currentSong']),
-  playList: state.getIn(['player', 'playList']),//播放列表
-  sequencePlayList: state.getIn(['player', 'sequencePlayList']),//顺序排列时的播放列表
-  showPlayList: state.getIn(['player', 'showPlayList']),
-  mode: state.getIn(['player', 'mode'])
-});
-
-const mapDispatchToProps = dispatch => ({
-  togglePlayListDispatch(data) {
-    dispatch(changeShowPlayList(data))
-  },
-  //修改当前歌曲在列表中的index，也就是切歌
-  changeCurrentIndexDispatch(data) {
-    dispatch(changeCurrentIndex(data));
-  },
-  //修改当前的播放模式
-  changeModeDispatch(data) {
-    dispatch(changePlayMode(data));
-  },
-  //修改当前的歌曲列表
-  changePlayListDispatch(data) {
-    dispatch(changePlayList(data));
-  },
-  deleteSongDispatch(data) {
-    dispatch(deleteSong(data));
-  },
-  clearDispatch () {
-    // 1. 清空两个列表
-    dispatch (changePlayList ([]));
-    dispatch (changeSequecePlayList ([]));
-    // 2. 初始 currentIndex
-    dispatch (changeCurrentIndex (-1));
-    // 3. 关闭 PlayList 的显示
-    dispatch (changeShowPlayList (false));
-    // 4. 将当前歌曲置空
-    dispatch (changeCurrentSong ({}));
-    // 5. 重置播放状态
-    dispatch (changePlayingState (false));
-  }
-});
-
-export default connect(
-  mapStateToProps, 
-  mapDispatchToProps
-)(React.memo(PlayList));
+export default React.memo(PlayList);

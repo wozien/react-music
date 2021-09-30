@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { getAlbumDetail, changeEnterLoading } from './slice';
 import { Container } from './style';
 import { CSSTransition } from 'react-transition-group';
-import { actionCreators } from './store';
 import Scroll from '../../common/scroll';
 import AlbumHeader from '../../components/album-header';
 import AlbumDetail from '../../components/album-detail';
@@ -16,16 +16,17 @@ function Album(props) {
   const [isMarquee, setIsMarquee] = useState(false);
   const headerEl = useRef();
 
-  const { currentAlbum, enterLoading, songsCount } = props;
-  const { getAlbumDetailDispatch } = props;
+  const { currentAlbum, enterLoading } = useSelector(state => state.album);
+  const songsCount = useSelector(state => state.player.playList.length);
+  const dispatch = useDispatch();
 
   const id = props.match.params.id;   // 路由参数
-  const currentAlbumJS = currentAlbum ? currentAlbum.toJS() : {};
 
   useEffect(() => {
-    getAlbumDetailDispatch(id);
+    dispatch(changeEnterLoading(true));
+    dispatch(getAlbumDetail(id));
     // eslint-disable-next-line
-  }, [getAlbumDetailDispatch, id]);
+  }, [id]);
 
   // 传给子组件的回调函数最后用useCallback包裹，不然父组件每次执行
   // 都会生成新的函数，造成子组件memo失效从而进行不必要渲染
@@ -42,7 +43,7 @@ function Album(props) {
       if (pos.y < minScrollY) {
         headerDOM.style.backgroundColor = CommonStyle['theme-color'];
         headerDOM.style.opacity = Math.min(1, (percent - 1) / 2);
-        setTitle(currentAlbumJS.name);
+        setTitle(currentAlbum.name);
         setIsMarquee(true);
       } else {
         headerDOM.style.backgroundColor = '';
@@ -52,7 +53,7 @@ function Album(props) {
       }
       // eslint-disable-next-line
     },
-    [currentAlbumJS]
+    [currentAlbum]
   );
 
   return (
@@ -71,9 +72,9 @@ function Album(props) {
           handleClick={handleBack}
           isMarquee={isMarquee}
         ></AlbumHeader>
-        {!isEmptyObject(currentAlbumJS) ? (
+        {!isEmptyObject(currentAlbum) ? (
           <Scroll onScroll={handleScroll} bounceTop={false}>
-            <AlbumDetail currentAlbum={currentAlbumJS}></AlbumDetail>
+            <AlbumDetail currentAlbum={currentAlbum}></AlbumDetail>
           </Scroll>
         ) : null}
         {enterLoading ? <Loading></Loading> : null}
@@ -82,20 +83,4 @@ function Album(props) {
   );
 }
 
-const mapState = state => ({
-  enterLoading: state.getIn(['album', 'enterLoading']),
-  currentAlbum: state.getIn(['album', 'currentAlbum']),
-  songsCount: state.getIn(['player', 'playList']).size
-});
-
-const mapDispatch = dispatch => ({
-  getAlbumDetailDispatch(id) {
-    dispatch(actionCreators.changeEnterLoading(true));
-    dispatch(actionCreators.getAlbumDetail(id));
-  }
-});
-
-export default connect(
-  mapState,
-  mapDispatch
-)(React.memo(Album));
+export default React.memo(Album);
