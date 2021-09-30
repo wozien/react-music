@@ -1,7 +1,8 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
-import { actionCreators } from './store';
+import { changeEnterLoading, getSingerInfo } from './slice';
 import Header from '../../components/album-header';
 import Scroll from '../../common/scroll';
 import SongList from '../../components/song-list';
@@ -14,8 +15,13 @@ function Singer(props) {
   const musicNoteRef = useRef();
   const [showStatus, setShowStatus] = useState(true);
 
-  const { artist, hotSongs, enterLoading, songsCount } = props;
-  const { getSingerInfoDispatch } = props;
+  const { artist, hotSongs, enterLoading } = useSelector(state => state.singer);
+  const songsCount = useSelector(state => state.player.playList.length);
+  const dispatch = useDispatch();
+  const getSingerInfoDispatch = (id) => {
+    dispatch(changeEnterLoading(true));
+    dispatch(getSingerInfo(id));
+  }
 
   const imgWrapper = useRef();
   const collectButton = useRef();
@@ -24,9 +30,9 @@ function Singer(props) {
   const layer = useRef();
   const header = useRef();
   const OFFSET = 7; // 露出圆角的偏移
+  const { id } = useParams();
 
   useEffect(() => {
-    const id = props.match.params.id;
     getSingerInfoDispatch(id);
     const h = imgWrapper.current.offsetHeight;
     initHeight.current = h;
@@ -81,9 +87,6 @@ function Singer(props) {
     musicNoteRef.current.startAnimation({ x, y });
   };
 
-  const artistJS = artist ? artist.toJS() : {};
-  const songs = hotSongs ? hotSongs.toJS() : [];
-
   return (
     <CSSTransition
       in={showStatus}
@@ -94,8 +97,8 @@ function Singer(props) {
       onExited={props.history.goBack}
     >
       <Container play={songsCount}>
-        <Header ref={header} title={artistJS.name} handleClick={handleBack}></Header>
-        <ImgWrapper bgUrl={artistJS.picUrl} ref={imgWrapper}>
+        <Header ref={header} title={artist.name} handleClick={handleBack}></Header>
+        <ImgWrapper bgUrl={artist.picUrl} ref={imgWrapper}>
           <div className="filter"></div>
         </ImgWrapper>
         <CollectButton ref={collectButton}>
@@ -105,7 +108,7 @@ function Singer(props) {
         <BgLayer ref={layer}></BgLayer>
         <SongListWrapper ref={songListWrapper}>
           <Scroll ref={songScroll} onScroll={handleScroll}>
-            <SongList songs={songs} showCollect={false} musicAnimation={musicAnimation}></SongList>
+            <SongList songs={hotSongs} showCollect={false} musicAnimation={musicAnimation}></SongList>
           </Scroll>
         </SongListWrapper>
         {enterLoading ? <Loading></Loading> : null}
@@ -115,21 +118,4 @@ function Singer(props) {
   );
 }
 
-const mapState = state => ({
-  artist: state.getIn(['singer', 'artist']),
-  hotSongs: state.getIn(['singer', 'hotSongs']),
-  enterLoading: state.getIn(['singer', 'enterLoading']),
-  songsCount: state.getIn(['player', 'playList']).size
-});
-
-const mapDispatch = dispatch => ({
-  getSingerInfoDispatch(id) {
-    dispatch(actionCreators.changeEnterLoading(true));
-    dispatch(actionCreators.getSingerInfo(id));
-  }
-});
-
-export default connect(
-  mapState,
-  mapDispatch
-)(React.memo(Singer));
+export default React.memo(Singer);

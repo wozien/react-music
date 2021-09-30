@@ -184,14 +184,21 @@ function Child(props) {
 
 ```js
 props.history.push('/')
+
+// 使用hook
+import { useHistory } from 'react-router-dom'
+const history = useHistory()
+history.push('/')
+
 ```
 路由参数获取：
 ```js
 const id = props.match.params.id;   // 路由参数
+
+// 使用hook
+import { useParams } from 'react-router-dom'
+const { id } = useParams()
 ```
-
-
-
 
 ## 集成 Redux
 
@@ -305,8 +312,58 @@ export default connect(
 )(React.memo(Child))
 ```
 
+> 使用官方推荐 `@reduxjs/toolkit` 工具包编写可大大减少重复样板代码, 它默认集成了 `redux`, `redux-thunk`, `immer` 等
 
+编写每个字模块的 `slice` 文件
 
+```js
+// src/pages/recommend/slice.js
+import { createSlice } from '@reduxjs/toolkit'
+
+const slice = createSlice({
+  name: 'recommend',
+  initialState: {
+    bannerList: []
+  },
+  reducers: {
+    changeBanner(state, { payload }) {
+      state.bannerList = payload
+    }
+  }
+})
+// action creator function
+export const { changeBanner } = slice.actions
+
+// async action width thunk
+export const getBannerList = () => {
+  return dispatch => {
+    getBannerRequest()
+      .then(res => {
+        dispatch(changeBanner(res.banners));
+      })
+      .catch(() => {
+        console.log('获取轮播图数据错误');
+      });
+  };
+};
+
+export default slice.reducer
+```
+
+在全局 `store` 组装:
+
+```js
+import { configureStore } from '@reduxjs/toolkit'
+import recommendReducer from '../pages/recommend/slice'
+
+const store = configureStore({
+  reducer: {
+    recommend: recommendReducer,
+  }
+})
+
+export default store
+```
 ## 图片懒加载
 
 ```bash
@@ -358,7 +415,4 @@ yarn add react-transition-group
 </CSSTransition>
 ```
 
-## 改进计划
-
-`dva`: 状态管理，减少 redux 繁琐的状态模版
-`immer`： 可以替换 `immutable.js`， 更加轻量高效
+[更多API说明](https://reactcommunity.org/react-transition-group/css-transition)

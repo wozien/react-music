@@ -1,12 +1,13 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import LazyLoad from 'react-lazyload';
 import { getCount } from '@/utils';
 import { ListWrapper, List, ListItem } from './style';
 
 function RecommendList(props) {
+  const history = useHistory()
   const enterDetail = id => {
-    props.history.push(`/recommend/${id}`);
+    history.push(`/recommend/${id}`);
   };
 
   return (
@@ -41,4 +42,4 @@ function RecommendList(props) {
 
 // 因为组件时Recommend组件的子组件，无法直接
 // 从props中获取history对象， 需要withRouter包一下
-export default React.memo(withRouter(RecommendList));
+export default React.memo(RecommendList);
