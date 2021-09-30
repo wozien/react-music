@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import { changeEnterLoading, getSingerInfo } from './slice';
 import Header from '../../components/album-header';
@@ -29,9 +30,9 @@ function Singer(props) {
   const layer = useRef();
   const header = useRef();
   const OFFSET = 7; // 露出圆角的偏移
+  const { id } = useParams();
 
   useEffect(() => {
-    const id = props.match.params.id;
     getSingerInfoDispatch(id);
     const h = imgWrapper.current.offsetHeight;
     initHeight.current = h;

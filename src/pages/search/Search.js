@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 import { Container, HotKey, ShortcutWrapper, List, ListItem, SongItem } from './style'
 import SearchBox from '@/components/search-box'
@@ -29,6 +30,7 @@ function Search(props) {
   const songsCount = useSelector(state => state.player.playList.length);
 
   const dispatch = useDispatch()
+  const history = useHistory()
 
   useEffect(() => {
     setShow(true)
@@ -79,7 +81,7 @@ function Search(props) {
         {
           albums.map((item, index) => {
             return (
-              <ListItem key={item.accountId+""+index} onClick={() => props.history.push(`/album/${item.id}`)}>
+              <ListItem key={item.accountId+""+index} onClick={() => history.push(`/album/${item.id}`)}>
                 <div className="img_wrapper">
                   <LazyLoad placeholder={<img width="100%" height="100%" src={require('./music.png')} alt="music"/>}>
                     <img src={item.coverImgUrl} width="100%" height="100%" alt="music"/>
@@ -103,7 +105,7 @@ function Search(props) {
         {
           singers.map((item, index) => {
             return (
-              <ListItem key={item.accountId+""+index} onClick={() => props.history.push(`/singers/${item.id}`)}>
+              <ListItem key={item.accountId+""+index} onClick={() => history.push(`/singers/${item.id}`)}>
                 <div className="img_wrapper">
                   <LazyLoad placeholder={<img width="100%" height="100%" src={require('./singer.png')} alt="singer"/>}>
                     <img src={item.picUrl} width="100%" height="100%" alt="music"/>
@@ -146,7 +148,7 @@ function Search(props) {
       appear={true}
       classNames="fly"
       unmountOnExit
-      onExit={() => props.history.goBack()}
+      onExit={() => history.goBack()}
     >
       <Container play={songsCount}>
         <div className="search_box_wrapper">

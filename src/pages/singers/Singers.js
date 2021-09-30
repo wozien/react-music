@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { renderRoutes } from 'react-router-config';
 import {
   changeEnterLoading,
@@ -26,6 +27,7 @@ function Singers(props) {
   const songsCount = useSelector(state => state.player.playList.length);
 
   const dispatch = useDispatch();
+  const history = useHistory();
   const getSingerListDispatch = () => dispatch(getHotSingerList());
   const updateDispatch = (category, alpha) => {
     dispatch(changePageCount(0));
@@ -70,7 +72,7 @@ function Singers(props) {
   };
 
   let enterDetail = id => {
-    props.history.push(`/singers/${id}`);
+    history.push(`/singers/${id}`);
   };
 
   useEffect(() => {

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { renderRoutes } from 'react-router-config';
 import { getRankList } from './slice';
 import { Container, List, ListItem, SongList } from './style';
@@ -11,6 +12,7 @@ function Rank(props) {
   const { rankList, loading } = useSelector(state => state.rank);
   const songsCount = useSelector(state => state.player.playList.length);
   const dispatch = useDispatch();
+  const history = useHistory();
 
   useEffect(() => {
     if (!rankList.length) {
@@ -21,7 +23,7 @@ function Rank(props) {
 
   const enterDetail = detail => {
     // 后续操作
-    props.history.push(`/rank/${detail.id}`);
+    history.push(`/rank/${detail.id}`);
   };
 
   const renderSongList = list => {

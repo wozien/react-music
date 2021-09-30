@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { getAlbumDetail, changeEnterLoading } from './slice';
 import { Container } from './style';
 import { CSSTransition } from 'react-transition-group';
@@ -20,7 +21,8 @@ function Album(props) {
   const songsCount = useSelector(state => state.player.playList.length);
   const dispatch = useDispatch();
 
-  const id = props.match.params.id;   // 路由参数
+  // const id = props.match.params.id;   // 路由参数
+  const { id } = useParams(); // 路由参数
 
   useEffect(() => {
     dispatch(changeEnterLoading(true));
